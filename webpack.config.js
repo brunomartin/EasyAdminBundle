@@ -51,6 +51,7 @@ Encore
     .addEntry('field-boolean', './assets/js/field-boolean.js')
     .addEntry('field-code-editor', './assets/js/field-code-editor.js')
     .addEntry('field-collection', './assets/js/field-collection.js')
+    .addEntry('field-collection-table', './assets/js/field-collection-table.js')
     .addEntry('field-file-upload', './assets/js/field-file-upload.js')
     .addEntry('field-image', './assets/js/field-image.js')
     .addEntry('field-slug', './assets/js/field-slug.js')

@@ -219,7 +219,17 @@
 
 {% block form_widget_compound %}
     <div class="form-widget-compound">
-        {% if 'collection' in block_prefixes %}
+        {% if 'collection_table' in block_prefixes %}
+            {# the "is iterable" check is needed because if an object implements __toString() and
+                returns an empty string, "is empty" returns true even if it's not a collection #}
+            {% set isEmptyCollection = value is null or (value is iterable and value is empty) %}
+            {% if isEmptyCollection %}
+                {{ block('empty_collection_table') }}
+            {% endif %}
+            {% if isEmptyCollection or form.vars.prototype is defined %}
+                {% set attr = attr|merge({'data-empty-collection-table': block('empty_collection_table') }) %}
+            {% endif %}
+        {% elseif 'collection' in block_prefixes %}
             {# the "is iterable" check is needed because if an object implements __toString() and
                returns an empty string, "is empty" returns true even if it's not a collection #}
             {% set isEmptyCollection = value is null or (value is iterable and value is empty) %}
@@ -240,6 +250,103 @@
         {{- form_widget(form) -}}
     </div>
 {%- endblock button_row %}
+
+{# Collection table #}
+
+{% block collection_table_row %}
+    {% if prototype is defined and not prototype.rendered %}
+        {% set row_attr = row_attr|merge({ 'data-prototype': form_row(prototype) }) %}
+    {% endif %}
+
+    {% set row_attr = row_attr|merge({
+        'data-ea-collection-table-field': 'true',
+        'data-allow-add': allow_add ? 'true' : 'false',
+        'data-allow-delete': allow_delete ? 'true' : 'false',
+        'data-num-items': form.children is empty ? 0 : max(form.children|keys),
+        'data-form-type-name-placeholder': prototype is defined ? prototype.vars.name : '',
+    }) %}
+
+    {{ block('form_row') }}
+{% endblock collection_table_row %}
+
+{% block collection_table_widget %}
+    {# the "is iterable" check is needed because if an object implements __toString() and
+               returns an empty string, "is empty" returns true even if it's not a collection #}
+    {% set isEmptyCollection = value is null or (value is iterable and value is empty) %}
+
+    {# Build headers for the table #}
+    {% set table_fields = [] %}
+    {# First and last fields are easyadmin specific ones #}
+    {% for field in prototype.children|slice(1, prototype.children|length-2) %}
+        {% set table_fields = table_fields|merge([field]) %}
+    {% endfor %}
+
+    {% set allows_deleting_items = form.vars.allow_delete|default(false) %}
+
+    <div class="ea-form-collection-table-items">
+        <div>
+            <table class="table table-sm table-fixed">
+                <thead>
+                    <tr>
+                    {% for field in table_fields %}
+                        <th scope="col col-1">{{ form_label(field) }}</th>
+                    {% endfor %}
+                    {% if allows_deleting_items and not disabled %}
+                        <th scope="col col-1"></th>
+                    {% endif %}                    
+                    </tr>
+                </thead>
+                <tbody>
+                    {{ block('form_widget') }}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% if isEmptyCollection or form.vars.prototype is defined %}
+        {% set attr = attr|merge({'data-empty-collection-table': block('empty_collection_table') }) %}
+    {% endif %}
+
+    {% if allow_add|default(false) and not disabled %}
+        <button type="button" class="btn btn-link field-collection-table-add-button">
+            <i class="fa fa-plus pr-1"></i>
+            {{ 'action.add_new_item'|trans({}, 'EasyAdminBundle') }}
+        </button>
+    {% endif %}
+{% endblock collection_table_widget %}
+
+{% block collection_table_entry_row %}
+    {% set allows_deleting_items = form_parent(form).vars.allow_delete|default(false) %}
+
+    {% set delete_item_button %}
+        <button type="button" class="btn btn-link btn-link-danger field-collection-table-delete-button"
+                title="{{ 'action.remove_item'|trans({}, 'EasyAdminBundle') }}">
+            <i class="far fa-trash-alt"></i>
+        </button>
+    {% endset %}
+
+    <tr class="field-collection-table-item {{ not form.vars.valid ? 'is-invalid' }}">
+
+        {% set table_fields = [] %}
+        {# First and last fields are easyadmin specific ones #}
+        {% for field in form.children|slice(1, form.children|length-2) %}
+            {% set table_fields = table_fields|merge([field]) %}
+        {% endfor %}
+
+        {% for field in table_fields %}
+            <td>{{form_widget(field)}}</td>
+        {% endfor %}
+
+        {% if allows_deleting_items and not disabled %}
+            <td>{{ delete_item_button }}</td>
+        {% endif %}
+    </tr>
+    
+{% endblock collection_table_entry_row %}
+
+{% block empty_collection_table %}
+
+{% endblock empty_collection_table %}
 
 {# Labels #}
 

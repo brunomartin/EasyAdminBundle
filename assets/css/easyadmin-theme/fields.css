@@ -158,6 +158,39 @@
   right: 5px;
 }
 
+/* Collection table field */
+.form-widget-compound .collection-table-empty {
+  margin-bottom: 10px;
+  padding-top: 5px;
+}
+.form-group.field-collection-table label:empty {
+  display: none;
+}
+
+.form-group.field-array .field-collection-table-item + .field-collection-table-item {
+  margin-top: 5px;
+}
+.form-group.field-array .field-collection-table-item {
+  display: flex;
+}
+
+.form-group.field-collection-table .field-collection-table-add-button {
+  margin-top: 5px;
+}
+
+/* Remove arrows for integer input */
+/* Chrome, Safari, Edge, Opera */
+.ea-form-collection-table-items input::-webkit-outer-spin-button,
+.ea-form-collection-table-items input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+.ea-form-collection-table-items input[type=number] {
+  -moz-appearance: textfield;
+}
+
 /* Color field */
 .field-color .color-sample {
   border-radius: var(--border-radius);
