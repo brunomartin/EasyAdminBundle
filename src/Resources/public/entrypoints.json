@@ -43,6 +43,11 @@
         "/field-collection.32367ca8.js"
       ]
     },
+    "field-collection-table": {
+      "js": [
+        "/field-collection-table.dfae3be8.js"
+      ]
+    },
     "field-file-upload": {
       "js": [
         "/field-file-upload.a3a92842.js"

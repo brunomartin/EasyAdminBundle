@@ -9,7 +9,7 @@ use Symfony\Contracts\Translation\TranslatableInterface;
 
 use EasyCorp\Bundle\EasyAdminBundle\Field\FieldTrait;
 
-use App\Admin\Form\Type\CollectionTableType;
+use EasyCorp\Bundle\EasyAdminBundle\Form\Type\CollectionTableType;
 
 /**
  * @author Bruno Martin <bruno.martin.2@gmail.com>
