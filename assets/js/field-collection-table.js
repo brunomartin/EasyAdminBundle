@@ -1,5 +1,9 @@
 const eaCollectionHandler = function (event) {
     document.querySelectorAll('button.field-collection-table-add-button').forEach((addButton) => {
+
+        // For dev, deactivate this js
+        // return;
+
         const collection = addButton.closest('[data-ea-collection-table-field]');
 
         if (!collection || collection.classList.contains('processed')) {
