@@ -286,6 +286,7 @@
     <div class="ea-form-collection-table-items">
         <div>
             <table class="table table-sm table-fixed">
+                {# <caption>{{form_label(form)}}</caption> #}
                 <thead>
                     <tr>
                     {% for field in table_fields %}
@@ -293,12 +294,20 @@
                     {% endfor %}
                     {% if allows_deleting_items and not disabled %}
                         <th scope="col col-1"></th>
-                    {% endif %}                    
+                    {% endif %}
                     </tr>
                 </thead>
                 <tbody>
                     {{ block('form_widget') }}
                 </tbody>
+                <tfoot>
+                    {% for field in table_fields %}
+                        <th scope="col col-1">{{ form_label(field) }}</th>
+                    {% endfor %}
+                    {% if allows_deleting_items and not disabled %}
+                        <th scope="col col-1"></th>
+                    {% endif %}
+                </tfoot>
             </table>
         </div>
     </div>

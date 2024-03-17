@@ -33,12 +33,6 @@ const EaCollectionProperty = {
             // Use a counter to avoid having the same index more than once
             let numItems = parseInt(collection.dataset.numItems);
 
-            // Remove the 'Empty Collection' badge, if present
-            const emptyCollectionBadge = this.parentElement.querySelector('.collection-table-empty');
-            if (null !== emptyCollectionBadge) {
-                emptyCollectionBadge.outerHTML = isArrayCollection ? '<div class="ea-form-collection-table-items"></div>' : '<div class="ea-form-collection-table-items"><div class="accordion"><div class="form-widget-compound"><div data-empty-collection-table></div></div></div></div>';
-            }
-
             const formTypeNamePlaceholder = collection.dataset.formTypeNamePlaceholder;
             const labelRegexp = new RegExp(formTypeNamePlaceholder + 'label__', 'g');
             const nameRegexp = new RegExp(formTypeNamePlaceholder, 'g');
@@ -48,10 +42,8 @@ const EaCollectionProperty = {
                 .replace(nameRegexp, numItems);
 
             collection.dataset.numItems = numItems;
-            // const newItemInsertionSelector = isArrayCollection ? '.ea-form-collection-table-items' : '.ea-form-collection-table-items .accordion > .form-widget-compound [data-empty-collection-table]';
-            // const collectionItemsWrapper = collection.querySelector(newItemInsertionSelector);
 
-            const newItemInsertionSelector = isArrayCollection ? '.ea-form-collection-table-items' : '.ea-form-collection-table-items table > tbody';
+            const newItemInsertionSelector = '.ea-form-collection-table-items table > tbody';
             const collectionItemsWrapper = collection.querySelector(newItemInsertionSelector);
 
             collectionItemsWrapper.insertAdjacentHTML('beforeend', newItemHtml);
