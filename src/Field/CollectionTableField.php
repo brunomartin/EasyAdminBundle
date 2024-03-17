@@ -26,7 +26,7 @@ final class CollectionTableField implements FieldInterface
         return (new self())
             ->setProperty($propertyName)
             ->setLabel($label)
-            ->setTemplatePath('curd/field/collection_table')
+            ->setTemplateName('crud/field/collection_table')
             ->setFormType(CollectionTableType::class)
             ->addCssClass('field-collection-table')
             ->addJsFiles(Asset::fromEasyAdminAssetPackage('field-collection-table.js')->onlyOnForms())

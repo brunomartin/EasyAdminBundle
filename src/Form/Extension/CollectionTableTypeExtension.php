@@ -5,7 +5,6 @@ namespace EasyCorp\Bundle\EasyAdminBundle\Form\Extension;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
-
 use EasyCorp\Bundle\EasyAdminBundle\Form\Type\CollectionTableType;
 
 /**

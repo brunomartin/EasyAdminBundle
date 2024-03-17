@@ -27,6 +27,7 @@ final class TemplateRegistry
         'crud/field/choice' => '@EasyAdmin/crud/field/choice.html.twig',
         'crud/field/code_editor' => '@EasyAdmin/crud/field/code_editor.html.twig',
         'crud/field/collection' => '@EasyAdmin/crud/field/collection.html.twig',
+        'crud/field/collection_table' => '@EasyAdmin/crud/field/collection_table.html.twig',
         'crud/field/color' => '@EasyAdmin/crud/field/color.html.twig',
         'crud/field/country' => '@EasyAdmin/crud/field/country.html.twig',
         'crud/field/currency' => '@EasyAdmin/crud/field/currency.html.twig',

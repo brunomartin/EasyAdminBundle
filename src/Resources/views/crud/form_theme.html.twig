@@ -344,10 +344,6 @@
     
 {% endblock collection_table_entry_row %}
 
-{% block empty_collection_table %}
-
-{% endblock empty_collection_table %}
-
 {# Labels #}
 
 {% block form_label -%}
@@ -402,6 +398,10 @@
         {{ include(ea.templatePath('label/empty')) }}
     </div>
 {% endblock empty_collection %}
+
+{% block empty_collection_table %}
+
+{% endblock empty_collection_table %}
 
 {% block vich_file_row %}
     {% set force_error = true %}

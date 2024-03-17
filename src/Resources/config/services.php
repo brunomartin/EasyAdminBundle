@@ -33,6 +33,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\Configurator\BooleanConfigurator;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Configurator\ChoiceConfigurator;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Configurator\CodeEditorConfigurator;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Configurator\CollectionConfigurator;
+use EasyCorp\Bundle\EasyAdminBundle\Field\Configurator\CollectionTableConfigurator;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Configurator\CommonPostConfigurator;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Configurator\CommonPreConfigurator;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Configurator\CountryConfigurator;
@@ -315,6 +316,8 @@ return static function (ContainerConfigurator $container) {
 
         ->set(CollectionConfigurator::class)
 
+        ->set(CollectionTableConfigurator::class)
+
         ->set(CommonPostConfigurator::class)
             ->arg(0, service(AdminContextProvider::class))
             ->arg(1, '%kernel.charset%')
@@ -360,6 +363,11 @@ return static function (ContainerConfigurator $container) {
         ->set(ChoiceConfigurator::class)
 
         ->set(CollectionConfigurator::class)
+            ->arg(0, service('request_stack'))
+            ->arg(1, service(EntityFactory::class))
+            ->arg(2, service(ControllerFactory::class))
+
+        ->set(CollectionTableConfigurator::class)
             ->arg(0, service('request_stack'))
             ->arg(1, service(EntityFactory::class))
             ->arg(2, service(ControllerFactory::class))
