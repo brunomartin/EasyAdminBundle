@@ -284,16 +284,17 @@
     {% set allows_deleting_items = form.vars.allow_delete|default(false) %}
 
     <div class="ea-form-collection-table-items">
-        <div>
-            <table class="table table-sm table-fixed">
+        <div class="overflow-x-visible overflow-y-visible">
+        {# <div class=""> #}
+            <table class="table table-sm table-responsive">
                 {# <caption>{{form_label(form)}}</caption> #}
                 <thead>
                     <tr>
                     {% for field in table_fields %}
-                        <th scope="col col-1">{{ form_label(field) }}</th>
+                        <th scope="col">{{ form_label(field) }}</th>
                     {% endfor %}
                     {% if allows_deleting_items and not disabled %}
-                        <th scope="col col-1"></th>
+                        <th scope="col"></th>
                     {% endif %}
                     </tr>
                 </thead>
@@ -301,12 +302,14 @@
                     {{ block('form_widget') }}
                 </tbody>
                 <tfoot>
+                    </tr>
                     {% for field in table_fields %}
-                        <th scope="col col-1">{{ form_label(field) }}</th>
+                        <th scope="col">{{ form_label(field) }}</th>
                     {% endfor %}
                     {% if allows_deleting_items and not disabled %}
-                        <th scope="col col-1"></th>
+                        <th scope="col"></th>
                     {% endif %}
+                    </tr>
                 </tfoot>
             </table>
         </div>

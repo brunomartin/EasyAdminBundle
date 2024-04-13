@@ -30,7 +30,7 @@ final class CollectionTableField implements FieldInterface
             ->setFormType(CollectionTableType::class)
             ->addCssClass('field-collection-table')
             ->addJsFiles(Asset::fromEasyAdminAssetPackage('field-collection-table.js')->onlyOnForms())
-            ->setDefaultColumns('col-sm-12 col-md-10')
+            ->setDefaultColumns('col-md-10 col-xxl-8')
             ->setCustomOption(CollectionField::OPTION_ALLOW_ADD, true)
             ->setCustomOption(CollectionField::OPTION_ALLOW_DELETE, true)
             ->setCustomOption(CollectionField::OPTION_ENTRY_CRUD_CONTROLLER_FQCN, null);
