@@ -346,7 +346,14 @@
         {% endfor %}
 
         {% for field in table_fields %}
-            <td>{{form_widget(field)}}</td>
+            {% if field.vars.errors|length > 0 %}
+                {% set field_error = form_errors(field) %}
+                <td data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="right" title="{{field_error}}">
+                    {{form_widget(field)}}
+                </td>
+            {% else %}
+                <td>{{form_widget(field)}}</td>
+            {% endif %}
         {% endfor %}
 
         {% if allows_deleting_items and not disabled %}
