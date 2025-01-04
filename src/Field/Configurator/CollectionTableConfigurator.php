@@ -15,16 +15,14 @@ use EasyCorp\Bundle\EasyAdminBundle\Factory\EntityFactory;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionTableField;
 use EasyCorp\Bundle\EasyAdminBundle\Form\Type\CrudFormType;
-use Symfony\Component\Form\Extension\Core\Type\CountryType;
-use Symfony\Component\Form\Extension\Core\Type\CurrencyType;
-use Symfony\Component\Form\Extension\Core\Type\LanguageType;
-use Symfony\Component\Form\Extension\Core\Type\LocaleType;
-use Symfony\Component\Form\Extension\Core\Type\TimezoneType;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 use function Symfony\Component\String\u;
 
 /**
+ * Duplicated version of CollectionConfigurator to keep the necessary for
+ * CollectionTableField class
+ * 
  * @author Bruno Martin <bruno.martin.2@gmail.com>
  */
 final class CollectionTableConfigurator implements FieldConfiguratorInterface

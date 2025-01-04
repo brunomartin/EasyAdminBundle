@@ -11,7 +11,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Form\Type\CollectionTableType;
  * Extension that allows using collection_entry_* blocks in form themes.
  * This is the same code added in https://github.com/symfony/symfony/pull/36088
  * which is only available when using Symfony 5.1 or higher.
- *
+ * 
+ * This extension is a duplicate version of CollectionTypeExtension whose only difference is the block_prefix named collection_table_entry.
+ * 
  * @author Bruno Martin <bruno.martin.2@gmail.com>
  */
 class CollectionTableTypeExtension extends AbstractTypeExtension

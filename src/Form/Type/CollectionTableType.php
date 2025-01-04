@@ -20,8 +20,10 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 /**
-* Subclass of CollectionType whose purpose is to add prototype to add prototype
-* to view.
+ * Subclass of CollectionType whose purpose is to add prototype to add prototype
+ * to view.
+ * 
+ * @author Bruno Martin <bruno.martin.2@gmail.com>
 */
 class CollectionTableType extends AbstractType
 {
