@@ -115,7 +115,7 @@ To do so, add the following method to the entity::
 
     use Doctrine\ORM\Mapping as ORM;
 
-    /** @ORM\Entity */
+    #[ORM\Entity]
     class Customer
     {
         // ...
@@ -812,9 +812,12 @@ Misc. Options
         ->setFormTypeOptions(['option_name' => 'option_value'])
 
         // a custom HTML attribute added when rendering the field
-        // e.g. setAttribute('data-foo', 'bar') renders a 'data-foo="bar"' attribute in HTML
+        // e.g. setHtmlAttribute('data-foo', 'bar') renders a 'data-foo="bar"' attribute in HTML
+        // On 'index' and 'detail' pages, the attribute is added to the field container:
+        // <td> and div.field-group respectively
+        // On 'new' and 'edit' pages, the attribute is added to the form field;
         // it's a shortcut for the equivalent setFormTypeOption('attr.data-foo', 'bar)
-        ->setHtmlAttribute('attribute_name' => 'attribute_value')
+        ->setHtmlAttribute('attribute_name', 'attribute_value')
 
         // a key-value array of attributes to add to the HTML element
         ->setHtmlAttributes(['data-foo' => 'bar', 'autofocus' => 'autofocus'])
@@ -969,7 +972,7 @@ field DTO. For example, in a Twig template:
 Field Configurators
 -------------------
 
-Some default options of some fields depend on the value of the of the entity
+Some default options of some fields depend on the value of the entity
 property, which is only available during runtime. That's why you can optionally
 define a **field configurator**, which is a class that updates the config of the
 field before rendering them.

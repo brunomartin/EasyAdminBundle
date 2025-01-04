@@ -284,6 +284,11 @@ final class AdminUrlGenerator implements AdminUrlGeneratorInterface
             $this->unset(EA::DASHBOARD_CONTROLLER_FQCN);
         }
 
+        // if the current action is 'index' and an entity ID is defined, remove the entity ID to prevent exceptions automatically
+        if (Action::INDEX === $this->get(EA::CRUD_ACTION) && null !== $this->get(EA::ENTITY_ID)) {
+            $this->unset(EA::ENTITY_ID);
+        }
+
         // this happens when generating URLs from outside EasyAdmin (AdminContext is null) and
         // no Dashboard FQCN has been defined explicitly
         if (null === $this->dashboardRoute) {
@@ -294,9 +299,9 @@ final class AdminUrlGenerator implements AdminUrlGeneratorInterface
             $this->dashboardRoute = $this->dashboardControllerRegistry->getFirstDashboardRoute();
         }
 
-        // if present, remove the suffix of i18n route names (it's a two-letter locale at the end
-        // of the route name; e.g. 'dashboard.en' -> remove '.en', 'admin.index.es' -> remove '.es')
-        $this->dashboardRoute = preg_replace('~\.\w{2}$~', '', $this->dashboardRoute);
+        // if present, remove the suffix of i18n route names (it's the content after the last dot
+        // in the route name; e.g. 'dashboard.en' -> remove '.en', 'admin.index.en_US' -> remove '.en_US')
+        $this->dashboardRoute = preg_replace('~\.[a-z]{2}(_[A-Z]{2})?$~', '', $this->dashboardRoute);
 
         // this removes any parameter with a NULL value
         $routeParameters = array_filter(

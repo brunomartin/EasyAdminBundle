@@ -3,7 +3,7 @@
 return [
     'page_title' => [
         'dashboard' => 'Tablou de bord',
-        'detail' => '%entity_as_string%',
+        'detail' => '%entity_label_singular% <small>(#%entity_short_id%)</small>',
         'edit' => 'Editează %entity_label_singular%',
         'index' => '%entity_label_plural%',
         'new' => 'Creează %entity_label_singular%',
@@ -138,7 +138,7 @@ return [
 
     'autocomplete' => [
         'no-results-found' => 'Nu au fost găsite rezultate',
-        // 'no-more-results' => 'No more results',
+        'no-more-results' => 'Nu mai sunt rezultate',
         'loading-more-results' => 'Se încarcă mai multe rezultate…',
     ],
 ];

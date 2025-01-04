@@ -447,8 +447,8 @@ label.form-check-label {
     font-weight: bold;
     padding: 0 0 5px;
 }
-.form-fieldset-header .form-fieldset-title .form-fieldset-title-content .not-collapsible { cursor: default; }
-.form-fieldset-header .form-fieldset-title .form-fieldset-title-content .collapsed .form-fieldset-collapse-marker {
+.form-fieldset-header .form-fieldset-title .form-fieldset-title-content.not-collapsible { cursor: default; }
+.form-fieldset-header .form-fieldset-title .form-fieldset-title-content.collapsed .form-fieldset-collapse-marker {
     transform: rotate(0deg);
 }
 .form-fieldset-header .form-fieldset-title .form-fieldset-title-content .collapsible::after {
@@ -634,6 +634,7 @@ form .invalid-feedback > .d-block + .d-block {
     height: auto;
     margin-top: 7px;
     padding: 0;
+    border-color: var(--form-input-border-color);
 }
 .ea-fileupload .fileupload-list .fileupload-table {
     width: 100%;
@@ -649,10 +650,10 @@ form .invalid-feedback > .d-block + .d-block {
     max-width: 300px;
 }
 .ea-fileupload .fileupload-list .fileupload-table tr:nth-child(odd) td {
-    background-color: #f5f7ff;
+    background-color: var(--form-control-bg);
 }
 .ea-fileupload .fileupload-list .fileupload-table td.file-size {
-    color: #4e566d;
+    color: var(--text-muted);
 }
 
 /* Image/file vich uploads */

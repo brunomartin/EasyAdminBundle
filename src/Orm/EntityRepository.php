@@ -122,7 +122,8 @@ final class EntityRepository implements EntityRepositoryInterface
                     $queryBuilder->setParameter($parameterName, $dqlParameters['uuid_query'], 'ulid');
                 } elseif ($propertyConfig['is_text']) {
                     $parameterName = sprintf('query_for_text_%d', $queryTermIndex);
-                    $queryTermConditions->add(sprintf('LOWER(%s.%s) LIKE :%s', $entityName, $propertyConfig['property_name'], $parameterName));
+                    // concatenating an empty string is needed to avoid issues on PostgreSQL databases (https://github.com/EasyCorp/EasyAdminBundle/issues/6290)
+                    $queryTermConditions->add(sprintf('LOWER(CONCAT(%s.%s, \'\')) LIKE :%s', $entityName, $propertyConfig['property_name'], $parameterName));
                     $queryBuilder->setParameter($parameterName, $dqlParameters['text_query']);
                 } elseif ($propertyConfig['is_json'] && !$isPostgreSql) {
                     // neither LOWER() nor LIKE() are supported for JSON columns by all PostgreSQL installations
@@ -131,6 +132,12 @@ final class EntityRepository implements EntityRepositoryInterface
                     $queryBuilder->setParameter($parameterName, $dqlParameters['text_query']);
                 }
             }
+
+            // When no fields are queried, the current condition must not yield any results
+            if (0 === $queryTermConditions->count()) {
+                $queryTermConditions->add('0 = 1');
+            }
+
             if (SearchMode::ALL_TERMS === $searchDto->getSearchMode()) {
                 $queryBuilder->andWhere($queryTermConditions);
             } else {
@@ -261,13 +268,13 @@ final class EntityRepository implements EntityRepositoryInterface
                 $associatedEntityAlias = $associatedPropertyName = '';
                 for ($i = 0; $i < $numAssociatedProperties - 1; ++$i) {
                     $associatedEntityName = $associatedProperties[$i];
-                    $associatedEntityAlias = Escaper::escapeDqlAlias($associatedEntityName);
+                    $associatedEntityAlias = $entitiesAlreadyJoined[$associatedEntityName] ?? Escaper::escapeDqlAlias($associatedEntityName).(0 === $i ? '' : $i);
                     $associatedPropertyName = $associatedProperties[$i + 1];
 
-                    if (!\in_array($associatedEntityName, $entitiesAlreadyJoined, true)) {
-                        $parentEntityName = 0 === $i ? 'entity' : $associatedProperties[$i - 1];
+                    if (!\in_array($associatedEntityAlias, $entitiesAlreadyJoined, true)) {
+                        $parentEntityName = 0 === $i ? 'entity' : $entitiesAlreadyJoined[$associatedProperties[$i - 1]];
                         $queryBuilder->leftJoin(Escaper::escapeDqlAlias($parentEntityName).'.'.$associatedEntityName, $associatedEntityAlias);
-                        $entitiesAlreadyJoined[] = $associatedEntityName;
+                        $entitiesAlreadyJoined[$associatedEntityName] = $associatedEntityAlias;
                     }
 
                     if ($i < $numAssociatedProperties - 2) {

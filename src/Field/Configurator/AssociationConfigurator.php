@@ -92,6 +92,8 @@ final class AssociationConfigurator implements FieldConfiguratorInterface
             $field->setFormTypeOption('attr.data-ea-widget', 'ea-autocomplete');
         }
 
+        $field->setFormTypeOption('attr.data-ea-autocomplete-render-items-as-html', true === $field->getCustomOption(AssociationField::OPTION_ESCAPE_HTML_CONTENTS) ? 'false' : 'true');
+
         // check for embedded associations
         $propertyNameParts = explode('.', $propertyName);
         if (\count($propertyNameParts) > 1) {
@@ -118,11 +120,13 @@ final class AssociationConfigurator implements FieldConfiguratorInterface
             $field->setFormTypeOptionIfNotSet('class', $targetEntityFqcn);
 
             try {
-                $relatedEntityId = $accessor->getValue($entityDto->getInstance(), $propertyName.'.'.$metadata->getIdentifierFieldNames()[0]);
-                $relatedEntityDto = $this->entityFactory->create($targetEntityFqcn, $relatedEntityId);
+                if (null !== $entityDto->getInstance()) {
+                    $relatedEntityId = $accessor->getValue($entityDto->getInstance(), $propertyName.'.'.$metadata->getIdentifierFieldNames()[0]);
+                    $relatedEntityDto = $this->entityFactory->create($targetEntityFqcn, $relatedEntityId);
 
-                $field->setCustomOption(AssociationField::OPTION_RELATED_URL, $this->generateLinkToAssociatedEntity($targetCrudControllerFqcn, $relatedEntityDto));
-                $field->setFormattedValue($this->formatAsString($relatedEntityDto->getInstance(), $relatedEntityDto));
+                    $field->setCustomOption(AssociationField::OPTION_RELATED_URL, $this->generateLinkToAssociatedEntity($targetCrudControllerFqcn, $relatedEntityDto));
+                    $field->setFormattedValue($this->formatAsString($relatedEntityDto->getInstance(), $relatedEntityDto));
+                }
             } catch (UnexpectedTypeException) {
                 // this may crash if something in the tree is null, so just do nothing then
             }

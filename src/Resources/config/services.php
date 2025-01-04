@@ -208,7 +208,6 @@ return static function (ContainerConfigurator $container) {
             ->arg(4, service(MenuItemMatcherInterface::class))
 
         ->set(MenuItemMatcher::class)
-            ->arg(0, service(AdminContextProvider::class))
 
         ->alias(MenuItemMatcherInterface::class, MenuItemMatcher::class)
 
@@ -359,6 +358,7 @@ return static function (ContainerConfigurator $container) {
             ->arg(0, service(IntlFormatter::class))
 
         ->set(PercentConfigurator::class)
+            ->arg(0, service(IntlFormatter::class))
 
         ->set(ChoiceConfigurator::class)
 
