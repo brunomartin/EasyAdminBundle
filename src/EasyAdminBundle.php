@@ -11,10 +11,17 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class EasyAdminBundle extends Bundle
 {
-    public const VERSION = '4.13.6';
+    public const VERSION = '4.20.4';
 
     public function build(ContainerBuilder $container): void
     {
         $container->addCompilerPass(new CreateControllerRegistriesPass());
+    }
+
+    public function getPath(): string
+    {
+        $reflected = new \ReflectionObject($this);
+
+        return \dirname($reflected->getFileName(), 2);
     }
 }

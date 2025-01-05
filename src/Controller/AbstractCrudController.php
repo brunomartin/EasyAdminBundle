@@ -391,7 +391,7 @@ abstract class AbstractCrudController extends AbstractController implements Crud
             return $this->redirect($referrer);
         }
 
-        return $this->redirect($this->container->get(AdminUrlGenerator::class)->setAction(Action::INDEX)->unset(EA::ENTITY_ID)->generateUrl());
+        return $this->redirect($this->container->get(AdminUrlGenerator::class)->setController($context->getCrud()->getControllerFqcn())->setAction(Action::INDEX)->unset(EA::ENTITY_ID)->generateUrl());
     }
 
     public function batchDelete(AdminContext $context, BatchActionDto $batchActionDto): Response
@@ -425,6 +425,9 @@ abstract class AbstractCrudController extends AbstractController implements Crud
 
             $event = new BeforeEntityDeletedEvent($entityInstance);
             $this->container->get('event_dispatcher')->dispatch($event);
+            if ($event->isPropagationStopped()) {
+                return $event->getResponse();
+            }
             $entityInstance = $event->getEntityInstance();
 
             try {

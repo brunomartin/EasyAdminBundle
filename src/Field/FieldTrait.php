@@ -9,6 +9,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Option\TextAlign;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\AssetDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto;
 use Symfony\Component\ExpressionLanguage\Expression;
+use Symfony\Component\Form\FormConfigBuilder;
 use Symfony\Contracts\Translation\TranslatableInterface;
 
 /**
@@ -38,6 +39,21 @@ trait FieldTrait
     public function setProperty(string $propertyName): self
     {
         $this->dto->setProperty($propertyName);
+
+        return $this;
+    }
+
+    public function setPropertySuffix(string $propertyNameSuffix): self
+    {
+        if ('' === trim($propertyNameSuffix, " \t\n\r\0\v")) {
+            throw new \InvalidArgumentException('The suffix cannot be empty.');
+        }
+
+        if (!FormConfigBuilder::isValidName($propertyNameSuffix)) {
+            throw new \InvalidArgumentException(sprintf('The suffix "%s" is not valid. You must follow form name conventions.', $propertyNameSuffix));
+        }
+
+        $this->dto->setPropertyNameSuffix($propertyNameSuffix);
 
         return $this;
     }

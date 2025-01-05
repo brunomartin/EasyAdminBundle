@@ -122,6 +122,64 @@ and EasyAdmin passes the action to it automatically::
         ;
     }
 
+Generating Dynamic Action Labels
+--------------------------------
+
+Action labels can be dynamically generated based on the related entity they
+belong to. For example, an ``Invoice`` entity can be paid with multiple payments.
+On the top of each ``Invoice`` details page, administrators want to have an action
+link (or button) that brings them to a custom page that shows the received payments
+for that invoice. In order to provide a better user experience, the action link
+(or button) label must display the current number of received payments
+(i.e: ``3 payments``)::
+
+        use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+        use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+        use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+
+        public function configureActions(Actions $actions): Actions
+        {
+            $viewPayments = Action::new('payments')
+                ->setLabel(function (Invoice $invoice)) {
+                    return \count($invoice->getPayments()) . ' payments';
+                });
+
+                // in PHP 7.4 and newer you can use arrow functions
+                // ->setLabel(fn (Invoice $invoice) => \count($invoice->getPayments()) . ' payments')
+
+            return $actions
+                // ...
+                ->add(Crud::PAGE_DETAIL, $viewPayments);
+        }
+
+When the related entity object isn't enough for computing the action label,
+then any more specific service object can be used as a delegator. For example,
+a Doctrine repository service object can be used for counting the related number
+of payments for the administrated invoice::
+
+    use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+    use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+    use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+
+    private InvoicePaymentRepository $invoicePaymentRepository;
+
+    public function __construct(InvoicePaymentRepository $invoicePaymentRepository)
+    {
+        $this->invoicePaymentRepository = $invoicePaymentRepository;
+    }
+
+    public function configureActions(Actions $actions): Actions
+    {
+        $viewPayments = Action::new('payments')
+            ->setLabel(function (Invoice $invoice)) {
+                return $this->invoicePaymentRepository->countByInvoice($invoice) . ' payments';
+            });
+
+        return $actions
+            // ...
+            ->add(Crud::PAGE_DETAIL, $viewPayments);
+    }
+
 Displaying Actions Conditionally
 --------------------------------
 
@@ -274,9 +332,13 @@ the ``Action`` class constructor::
     // to display an icon for the action; otherwise users can't see or click on the action)
     $viewInvoice = Action::new('viewInvoice', false);
 
-    // the third optional argument is the full CSS class of a FontAwesome icon
-    // see https://fontawesome.com/v6/search?m=free
+    // the third optional argument is the icon name
     $viewInvoice = Action::new('viewInvoice', 'Invoice', 'fa fa-file-invoice');
+
+By default, EasyAdmin assumes that icon names correspond to `FontAwesome`_ CSS
+classes. The necessary CSS styles and web fonts are included by default too,
+so you don't need to take any additional steps to use FontAwesome icons. Alternatively,
+you can :ref:`use your own icon sets <icon-customization>` instead of FontAwesome.
 
 Then you can configure the basic HTML/CSS attributes of the button/element
 that will represent the action::
@@ -367,6 +429,19 @@ The following example shows all kinds of actions in practice::
 
             // add your logic here...
         }
+    }
+
+Custom actions can define the ``#[AdminAction]`` attribute to
+:ref:`customize their route name, path and methods <crud_routes>`::
+
+    use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminAction;
+    // ...
+
+
+    #[AdminAction(routePath: '/invoice', routeName: 'view_invoice', methods: ['GET', 'POST'])]
+    public function renderInvoice(AdminContext $context)
+    {
+        // ...
     }
 
 .. _global-actions:
@@ -644,3 +719,4 @@ by EasyAdmin::
         }
     }
 
+.. _`FontAwesome`: https://fontawesome.com/

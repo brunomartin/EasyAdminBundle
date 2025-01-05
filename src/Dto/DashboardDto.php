@@ -20,7 +20,7 @@ final class DashboardDto
     private bool $signedUrls = false;
     private bool $absoluteUrls = true;
     private bool $enableDarkMode = true;
-    private string $defaultColorScheme = ColorScheme::LIGHT;
+    private string $defaultColorScheme = ColorScheme::AUTO;
     /** @var LocaleDto[] */
     private array $locales = [];
 

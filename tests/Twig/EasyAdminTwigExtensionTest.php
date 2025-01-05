@@ -10,6 +10,7 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Contracts\Translation\TranslatableInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\UX\Icons\Twig\UXIconRuntime;
 
 class EasyAdminTwigExtensionTest extends KernelTestCase
 {
@@ -26,7 +27,8 @@ class EasyAdminTwigExtensionTest extends KernelTestCase
             $this->getMockBuilder(AdminContextProvider::class)->disableOriginalConstructor()->getMock(),
             $this->getMockBuilder(CsrfTokenManagerInterface::class)->disableOriginalConstructor()->getMock(),
             $this->getMockBuilder(ImportMapRenderer::class)->disableOriginalConstructor()->getMock(),
-            $translator
+            $translator,
+            $this->getMockBuilder(UXIconRuntime::class)->disableOriginalConstructor()->getMock(),
         );
 
         $result = $extension->representAsString($value, $toStringMethod);
@@ -48,7 +50,8 @@ class EasyAdminTwigExtensionTest extends KernelTestCase
             $this->getMockBuilder(AdminContextProvider::class)->disableOriginalConstructor()->getMock(),
             $this->getMockBuilder(CsrfTokenManagerInterface::class)->disableOriginalConstructor()->getMock(),
             $this->getMockBuilder(ImportMapRenderer::class)->disableOriginalConstructor()->getMock(),
-            $this->getMockBuilder(TranslatorInterface::class)->disableOriginalConstructor()->getMock()
+            $this->getMockBuilder(TranslatorInterface::class)->disableOriginalConstructor()->getMock(),
+            $this->getMockBuilder(UXIconRuntime::class)->disableOriginalConstructor()->getMock(),
         );
 
         $extension->representAsString(new class {}, 'someMethod');

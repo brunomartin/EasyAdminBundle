@@ -221,6 +221,18 @@ final class MenuItemDto
     }
 
     /**
+     * Tells if the badge HTML element should be displayed or not. This is used
+     * e.g. to not display a badge when its value is null or false.
+     */
+    public function hasVisibleBadge(): bool
+    {
+        $badgeContent = $this->getBadge()?->getContent();
+
+        // the number 0 is not included here because it's valid to display a badge with the value 0
+        return null !== $badgeContent && false !== $badgeContent && '' !== $badgeContent;
+    }
+
+    /**
      * @return MenuItemDto[]
      */
     public function getSubItems(): array

@@ -27,6 +27,7 @@ final class FieldDto
 {
     private ?string $fieldFqcn = null;
     private ?string $propertyName = null;
+    private ?string $propertyNameSuffix = null;
     private mixed $value = null;
     private mixed $formattedValue = null;
     private $formatValueCallable;
@@ -158,6 +159,26 @@ final class FieldDto
     public function setProperty(string $propertyName): void
     {
         $this->propertyName = $propertyName;
+    }
+
+    public function getPropertyNameSuffix(): ?string
+    {
+        return $this->propertyNameSuffix;
+    }
+
+    public function setPropertyNameSuffix(?string $propertyNameSuffix): void
+    {
+        $this->propertyNameSuffix = $propertyNameSuffix;
+    }
+
+    public function getPropertyNameWithSuffix(): string
+    {
+        return sprintf(
+            '%s%s%s',
+            $this->propertyName,
+            null !== $this->propertyNameSuffix ? '_' : '',
+            $this->propertyNameSuffix ?? '',
+        );
     }
 
     /**

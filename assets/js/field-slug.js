@@ -83,7 +83,6 @@ class Slugger {
      */
     appendLockButton() {
         this.lockButton = this.field.parentNode.querySelector('button');
-        this.lockButtonIcon = this.lockButton.querySelector('i');
         this.lockButton.addEventListener('click', () => {
             if (this.locked) {
                 let confirmMessage = this.field.dataset.confirmText || null;
@@ -106,7 +105,7 @@ class Slugger {
      */
     unlock() {
         this.locked = false;
-        this.lockButtonIcon.classList.replace('fa-lock', 'fa-lock-open');
+        this.lockButton.innerHTML = this.lockButton.getAttribute('data-icon-unlocked');
         this.field.removeAttribute('readonly');
     }
 
@@ -115,7 +114,7 @@ class Slugger {
      */
     lock() {
         this.locked = true;
-        this.lockButtonIcon.classList.replace('fa-lock-open', 'fa-lock');
+        this.lockButton.innerHTML = this.lockButton.getAttribute('data-icon-locked');
 
         // Locking it back changes the value either to default value, or recomputes it
         if ('' !== this.currentSlug) {

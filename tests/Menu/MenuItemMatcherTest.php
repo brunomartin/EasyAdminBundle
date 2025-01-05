@@ -6,6 +6,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Option\EA;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\MenuItemDto;
 use EasyCorp\Bundle\EasyAdminBundle\Menu\MenuItemMatcher;
+use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,7 +16,10 @@ class MenuItemMatcherTest extends KernelTestCase
     public function testIsSelectedWhenContextIsNull()
     {
         $request = $this->getRequestMock();
-        $menuItemMatcher = new MenuItemMatcher();
+
+        self::bootKernel();
+        $adminUrlGenerator = self::getContainer()->get(AdminUrlGenerator::class);
+        $menuItemMatcher = new MenuItemMatcher($adminUrlGenerator);
         $menuItemDto = new MenuItemDto();
 
         $menuItemMatcher->markSelectedMenuItem([$menuItemDto], $request);
@@ -26,7 +30,10 @@ class MenuItemMatcherTest extends KernelTestCase
     public function testIsSelectedWhenMenuItemIsSection()
     {
         $request = $this->getRequestMock();
-        $menuItemMatcher = new MenuItemMatcher();
+
+        self::bootKernel();
+        $adminUrlGenerator = self::getContainer()->get(AdminUrlGenerator::class);
+        $menuItemMatcher = new MenuItemMatcher($adminUrlGenerator);
         $menuItemDto = new MenuItemDto();
         $menuItemDto->setType(MenuItemDto::TYPE_SECTION);
 
@@ -40,7 +47,10 @@ class MenuItemMatcherTest extends KernelTestCase
         $request = $this->getRequestMock(
             getControllerFqcn: 'App\Controller\Admin\SomeController',
         );
-        $menuItemMatcher = new MenuItemMatcher();
+
+        self::bootKernel();
+        $adminUrlGenerator = self::getContainer()->get(AdminUrlGenerator::class);
+        $menuItemMatcher = new MenuItemMatcher($adminUrlGenerator);
         $menuItemDto = $this->getMenuItemDto();
         $menuItemMatcher->markSelectedMenuItem([$menuItemDto], $request);
 
@@ -88,7 +98,10 @@ class MenuItemMatcherTest extends KernelTestCase
         $request = $this->getRequestMock(
             routeName: 'some_route',
         );
-        $menuItemMatcher = new MenuItemMatcher();
+
+        self::bootKernel();
+        $adminUrlGenerator = self::getContainer()->get(AdminUrlGenerator::class);
+        $menuItemMatcher = new MenuItemMatcher($adminUrlGenerator);
         $menuItemDto = $this->getMenuItemDto(routeName: 'some_route');
 
         $menuItemMatcher->markSelectedMenuItem([$menuItemDto], $request);
@@ -126,7 +139,10 @@ class MenuItemMatcherTest extends KernelTestCase
         $request = $this->getRequestMock(
             getUri: 'https://example.com/foo?bar=baz',
         );
-        $menuItemMatcher = new MenuItemMatcher();
+
+        self::bootKernel();
+        $adminUrlGenerator = self::getContainer()->get(AdminUrlGenerator::class);
+        $menuItemMatcher = new MenuItemMatcher($adminUrlGenerator);
         $menuItemDto = new MenuItemDto();
 
         $menuItemMatcher->markSelectedMenuItem([$menuItemDto], $request);
@@ -164,7 +180,9 @@ class MenuItemMatcherTest extends KernelTestCase
             routeName: 'item2',
         );
 
-        $menuItemMatcher = new MenuItemMatcher();
+        self::bootKernel();
+        $adminUrlGenerator = self::getContainer()->get(AdminUrlGenerator::class);
+        $menuItemMatcher = new MenuItemMatcher($adminUrlGenerator);
         $menuItems = $menuItemMatcher->markSelectedMenuItem($menuItems, $request);
 
         $this->assertSame('item2', $this->getSelectedMenuItemLabel($menuItems), 'Perfect match: Dashboard item');
@@ -176,7 +194,10 @@ class MenuItemMatcherTest extends KernelTestCase
         $request = $this->getRequestMock(
             getControllerFqcn: 'App\Controller\Admin\Controller1',
         );
-        $menuItemMatcher = new MenuItemMatcher();
+
+        self::bootKernel();
+        $adminUrlGenerator = self::getContainer()->get(AdminUrlGenerator::class);
+        $menuItemMatcher = new MenuItemMatcher($adminUrlGenerator);
 
         $menuItems = $menuItemMatcher->markSelectedMenuItem($menuItems, $request);
 
@@ -351,6 +372,7 @@ class MenuItemMatcherTest extends KernelTestCase
 
         $request = $this->getMockBuilder(Request::class)->getMock();
         $request->query = new InputBag($queryParameters);
+        $request->attributes = new InputBag($queryParameters);
 
         if (null !== $getUri) {
             $request->method('getUri')->willReturn($getUri);
