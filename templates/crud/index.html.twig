@@ -160,21 +160,23 @@
                             <td class="actions {{ ea.crud.showEntityActionsAsDropdown ? 'actions-as-dropdown' }}">
                                 {% if entity.actions.count > 0 %}
                                     {% if ea.crud.showEntityActionsAsDropdown %}
-                                        <div class="dropdown dropdown-actions">
-                                            <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                {# don't use FontAwesome 'fa-ellipsis-h' icon here because it doesn't look good #}
-                                                {# this icon is 'dots-horizontal' icon from https://heroicons.com/ #}
-                                                <svg xmlns="http://www.w3.org/2000/svg" height="21" width="21" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" />
-                                                </svg>
-                                            </a>
+                                        <twig:ea:ActionMenu class="dropdown-actions">
+                                            <twig:ea:ActionMenu:Button withoutDropdownToggleMarker>
+                                                <twig:ea:Icon name="internal:dots-horizontal" />
+                                            </twig:ea:ActionMenu:Button>
 
-                                            <div class="dropdown-menu dropdown-menu-right">
-                                                {% for action in entity.actions %}
-                                                    {{ include(action.templatePath, { action: action, entity: entity, isIncludedInDropdown: ea.crud.showEntityActionsAsDropdown }, with_context = false) }}
-                                                {% endfor %}
-                                            </div>
-                                        </div>
+                                            <twig:ea:ActionMenu:Overlay>
+                                                <twig:ea:ActionMenu:ActionList>
+                                                    {% for action in entity.actions %}
+                                                        <twig:ea:ActionMenu:ActionList:Item
+                                                            class="{{ action.cssClass }}" url="{{ action.linkUrl }}"
+                                                            icon="{{ action.icon }}" icon:class="action-icon"
+                                                            htmlAttributes="{{ action.htmlAttributes }}"
+                                                            label="{{ action.label|trans }}" label:class="action-label" renderLabelRaw />
+                                                    {% endfor %}
+                                                </twig:ea:ActionMenu:ActionList>
+                                            </twig:ea:ActionMenu:Overlay>
+                                        </twig:ea:ActionMenu>
                                     {% else %}
                                         {% for action in entity.actions %}
                                             {{ include(action.templatePath, { action: action, entity: entity, isIncludedInDropdown: ea.crud.showEntityActionsAsDropdown }, with_context = false) }}

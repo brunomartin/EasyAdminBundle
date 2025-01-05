@@ -8,6 +8,10 @@ table.datagrid {
   margin-block-end: 0;
   inline-size: 100%;
 }
+table.datagrid:not(.datagrid-empty) tr:not(.empty-row) td.actions,
+table.datagrid:not(.datagrid-empty) tr:not(.empty-row) td.actions.actions-as-dropdown {
+  min-width: 50px;
+}
 @media (max-width: 767px) {
   table.datagrid:not(.datagrid-empty) tbody,
   table.datagrid:not(.datagrid-empty) tr,
@@ -182,17 +186,22 @@ table.datagrid {
   outline: none;
 }
 
+.datagrid .dropdown-actions {
+  display: inline-block;
+}
 .datagrid .dropdown-actions .dropdown-toggle {
   border: 1px solid transparent;
   border-radius: var(--border-radius);
   color: var(--dropdown-toggle-color);
-  padding: 3px 5px;
+  display: block;
+  padding: 1px 5px;
 }
-/* hides the caret added automatically by Bootstrap */
-.datagrid .dropdown-actions .dropdown-toggle:after { display: none; }
-.datagrid .dropdown-actions .dropdown-toggle:hover { cursor: pointer; }
 
-.datagrid .dropdown-actions .dropdown-toggle svg { vertical-align: top; }
+.datagrid .dropdown-actions .dropdown-toggle .icon {
+  display: block;
+  font-size: 21px;
+  inline-size: unset;
+}
 
 .datagrid .dropdown-actions .dropdown-menu { z-index: var(--zindex-900); }
 

@@ -23,7 +23,7 @@ Restrict Access to the Entire Backend
 
 Using the `access_control option`_, you can tell Symfony to require certain
 permissions to browse the URL associated to the backend. This is simple to do
-because :ref:`each dashboard only uses a single URL <dashboard-route>`:
+because :ref:`dashboard routes share a common prefix <dashboard-route>`:
 
 .. code-block:: yaml
 
@@ -32,11 +32,13 @@ because :ref:`each dashboard only uses a single URL <dashboard-route>`:
         # ...
 
         access_control:
-            # change '/admin' by the URL used by your Dashboard
+            # change '/admin' by the prefix used by your Dashboard URLs
             - { path: ^/admin, roles: ROLE_ADMIN }
             # ...
 
-Another option is to use the `#[IsGranted] attribute`_ in the dashboard controller::
+Alternatively you can use the `#[IsGranted] attribute`_. However, this can be
+cumbersome because you must apply it to all dashboard controllers and to all the
+:doc:`CRUD controllers </crud>`::
 
     // app/Controller/Admin/DashboardController.php
     use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -48,6 +50,8 @@ Another option is to use the `#[IsGranted] attribute`_ in the dashboard controll
     {
         // ...
     }
+
+    // don't forget to also apply #[IsGranted('ROLE_ADMIN')] to all CRUD controllers
 
 .. _security-controllers:
 

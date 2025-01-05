@@ -73,13 +73,11 @@
 
 #main-menu .menu .menu-icon {
     color: var(--sidebar-menu-icon-color);
-    align-items: center;
-    justify-content: center;
+    flex-shrink: 0;
     margin-inline-end: 10px;
     text-align: center;
     block-size: 16px;
     inline-size: 1.25em;
-    margin-top: 3px;
 }
 #main-menu .menu .menu-icon svg {
     color: var(--sidebar-menu-icon-color);
@@ -205,7 +203,7 @@ body.ea-sidebar-width-compact .sidebar #main-menu .menu .menu-item {
     }
     body.ea-sidebar-width-compact #main-menu .menu .menu-item.has-submenu:hover .submenu .menu-icon { margin-inline-end: 8px; }
 
-    body.ea-sidebar-width-compact #main-menu .menu .menu-item .menu-icon { font-size: 18px; block-size: 21px; max-inline-size: 21px; }
+    body.ea-sidebar-width-compact #main-menu .menu .menu-item .menu-icon { font-size: 18px; block-size: 21px; max-inline-size: 21px; line-height: normal; }
     body.ea-sidebar-width-compact #main-menu .menu .menu-item .submenu .menu-icon { font-size: 16px; position: relative; inset-inline-start: -4px; inline-size: 21px; }
 
     body.ea-sidebar-width-compact #main-menu .menu .menu-item .submenu {

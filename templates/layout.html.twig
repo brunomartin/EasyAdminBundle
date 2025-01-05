@@ -81,94 +81,97 @@
             {% endif %}
         {% endset %}
 
+        {% set user_menu %}
+            {% block user_menu %}
+                {% if ea.userMenu.items|length > 0 %}
+                    <twig:ea:ActionMenu:ActionList:Divider/>
+
+                    {% for item in ea.userMenu.items %}
+                        {% if item.isMenuSection %}
+                            {% if not loop.first %}
+                                <twig:ea:ActionMenu:ActionList:Divider/>
+                            {% endif %}
+
+                            <twig:ea:ActionMenu:ActionList:Header
+                                    label="{{ item.label|trans }}" class="{{ item.cssClass }}"
+                                    icon="{{ item.icon }}" htmlAttributes="{{ item.htmlAttributes }}"
+                            />
+                        {% else %}
+                            <twig:ea:ActionMenu:ActionList:Item
+                                label="{{ item.label|trans }}"
+                                class="user-action {{ item.cssClass }}" icon="{{ item.icon }}"
+                                url="{{ item.linkUrl }}" target="{{ item.linkTarget }}" rel="{{ item.linkRel }}"
+                                referrerpolicy="origin-when-cross-origin" htmlAttributes="{{ item.htmlAttributes }}"
+                            />
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            {% endblock %}
+        {% endset %}
+
         {% set impersonator_permission = constant('Symfony\\Component\\Security\\Core\\Authorization\\Voter\\AuthenticatedVoter::IS_IMPERSONATOR') is defined ? 'IS_IMPERSONATOR' : 'ROLE_PREVIOUS_ADMIN' %}
 
         {% set user_menu_dropdown %}
-            <ul class="dropdown-menu dropdown-menu-end">
-                <li class="dropdown-user-details">
+            <twig:ea:ActionMenu:ActionList>
+                <twig:ea:ActionMenu:ActionList:Content class="dropdown-user-details">
                     <div>{{ user_menu_avatar }}</div>
                     <div>
                         <span class="user-label">{{ 'user.logged_in_as'|trans(domain = 'EasyAdminBundle') }}</span>
                         <span class="user-name">{{ ea.user is null ? 'user.anonymous'|trans(domain = 'EasyAdminBundle') : ea.userMenu.name }}</span>
                     </div>
-                </li>
+                </twig:ea:ActionMenu:ActionList:Content>
 
-                {% block user_menu %}
-                    {% if ea.userMenu.items|length > 0 %}
-                        <li><hr class="dropdown-divider"></li>
-                        {% for item in ea.userMenu.items %}
-                            <li>
-                                {% if item.isMenuSection and not loop.first %}
-                                    <hr class="dropdown-divider">
-                                {% elseif not item.isMenuSection %}
-                                    <a href="{{ item.linkUrl }}" class="dropdown-item user-action {{ item.cssClass }}"
-                                       target="{{ item.linkTarget }}" rel="{{ item.linkRel }}"
-                                       referrerpolicy="origin-when-cross-origin">
-                                        {% if item.icon is not empty %}<twig:ea:Icon name="{{ item.icon }}" />{% endif %}
-                                        {{ item.label|trans }}
-                                    </a>
-                                {% endif %}
-                            </li>
-                        {% endfor %}
-                    {% endif %}
-                {% endblock user_menu %}
-            </ul>
+                {{ user_menu }}
+            </twig:ea:ActionMenu:ActionList>
         {% endset %}
 
         {% set settings_dropdown %}
             {% if ea.dashboardLocales or ea.dashboardHasDarkModeEnabled %}
-                <div class="dropdown dropdown-settings">
-                    <a class="dropdown-settings-button" type="button" data-bs-toggle="dropdown" data-bs-offset="0,5" aria-expanded="false">
+                <twig:ea:ActionMenu class="dropdown-settings">
+                    <twig:ea:ActionMenu:Button class="dropdown-settings-button" data-bs-offset="0,5" withoutDropdownToggleMarker>
                         <twig:ea:Icon name="internal:gear" />
-                    </a>
+                    </twig:ea:ActionMenu:Button>
 
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        {% if ea.dashboardLocales %}
-                            <li class="dropdown-header dropdown-locales-label">
-                                {{ 'settings.locale'|trans(domain = 'EasyAdminBundle') }}
-                            </li>
-
-                            {% for localeDto in ea.dashboardLocales %}
-                                <li>
-                                    <a href="{{ ea_url().set('_locale', localeDto.locale) }}" class="dropdown-item{% if app.request.locale == localeDto.locale %} active{% endif %}">
-                                        {% if localeDto.icon %}
-                                            <twig:ea:Icon name="{{ localeDto.icon }}" />
-                                        {% endif %}
-                                        {{ localeDto.name }}
-                                    </a>
-                                </li>
-                            {% endfor %}
-                        {% endif %}
-
-                        {% if ea.dashboardHasDarkModeEnabled %}
+                    <twig:ea:ActionMenu:Overlay>
+                        <twig:ea:ActionMenu:ActionList>
                             {% if ea.dashboardLocales %}
-                                <div class="dropdown-divider"></div>
+                                <twig:ea:ActionMenu:ActionList:Header
+                                    class="dropdown-locales-label"
+                                    label="{{ 'settings.locale'|trans(domain = 'EasyAdminBundle') }}" />
                             {% endif %}
 
-                            <li class="dropdown-header dropdown-appearance-label">
-                                {{ 'settings.appearance.label'|trans(domain = 'EasyAdminBundle') }}
-                            </li>
-                            <li>
-                                <a href="#" class="dropdown-item dropdown-appearance-item" data-ea-color-scheme="light">
-                                    <twig:ea:Icon name="internal:sun" />
-                                    {{ 'settings.appearance.light'|trans(domain = 'EasyAdminBundle') }}
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="dropdown-item dropdown-appearance-item" data-ea-color-scheme="dark">
-                                    <twig:ea:Icon name="internal:moon" />
-                                    {{ 'settings.appearance.dark'|trans(domain = 'EasyAdminBundle') }}
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="dropdown-item dropdown-appearance-item active" data-ea-color-scheme="auto">
-                                    <twig:ea:Icon name="internal:desktop" />
-                                    {{ 'settings.appearance.auto'|trans(domain = 'EasyAdminBundle') }}
-                                </a>
-                            </li>
-                        {% endif %}
-                    </ul>
-                </div>
+                            {% for localeDto in ea.dashboardLocales %}
+                                <twig:ea:ActionMenu:ActionList:Item
+                                    class="{{ app.request.locale == localeDto.locale ? 'active' }}"
+                                    url="{{ ea_url().set('_locale', localeDto.locale) }}"
+                                    icon="{{ localeDto.icon }}" label="{{ localeDto.name }}" />
+                            {% endfor %}
+
+                            {% if ea.dashboardHasDarkModeEnabled %}
+                                {% if ea.dashboardLocales %}
+                                    <twig:ea:ActionMenu:ActionList:Divider/>
+                                {% endif %}
+
+                                <twig:ea:ActionMenu:ActionList:Header
+                                    class="dropdown-appearance-label"
+                                    label="{{ 'settings.appearance.label'|trans(domain = 'EasyAdminBundle') }}" />
+
+                                <twig:ea:ActionMenu:ActionList:Item
+                                    class="dropdown-appearance-item"
+                                    url="#" icon="internal:sun" data-ea-color-scheme="light"
+                                    label="{{ 'settings.appearance.light'|trans(domain = 'EasyAdminBundle') }}" />
+                                <twig:ea:ActionMenu:ActionList:Item
+                                    class="dropdown-appearance-item"
+                                    url="#" icon="internal:moon" data-ea-color-scheme="dark"
+                                    label="{{ 'settings.appearance.dark'|trans(domain = 'EasyAdminBundle') }}" />
+                                <twig:ea:ActionMenu:ActionList:Item
+                                    class="dropdown-appearance-item active"
+                                    url="#" icon="internal:desktop" data-ea-color-scheme="auto"
+                                    label="{{ 'settings.appearance.auto'|trans(domain = 'EasyAdminBundle') }}" />
+                            {% endif %}
+                        </twig:ea:ActionMenu:ActionList>
+                    </twig:ea:ActionMenu:Overlay>
+                </twig:ea:ActionMenu>
             {% endif %}
         {% endset %}
 
@@ -188,8 +191,8 @@
                             {% endblock responsive_header_logo %}
                         </div>
 
-                        <div class="dropdown user-menu-wrapper {{ is_granted(impersonator_permission) ? 'user-is-impersonated' }} ms-auto">
-                            <a class="user-details" type="button" data-bs-toggle="dropdown" data-bs-offset="0,5" aria-expanded="false">
+                        <twig:ea:ActionMenu class="ms-auto user-menu-wrapper {{ is_granted(impersonator_permission) ? 'user-is-impersonated' }}">
+                            <twig:ea:ActionMenu:Button class="user-details" data-bs-offset="0,5" withoutDropdownToggleMarker>
                                 {# to make the site design consistent, always display the user avatar in responsive header
                                    and hide the user name (because there's no space left) regardless of the user config #}
                                 {% if ea.userMenu.avatarDisplayed %}
@@ -197,10 +200,11 @@
                                 {% else %}
                                     <twig:ea:Icon class="user-avatar" name="{{ ea.user is not null ? 'internal:user' : 'internal:user-xmark' }}" />
                                 {% endif %}
-                            </a>
-
-                            {{ user_menu_dropdown }}
-                        </div>
+                            </twig:ea:ActionMenu:Button>
+                            <twig:ea:ActionMenu:Overlay>
+                                {{ user_menu_dropdown }}
+                            </twig:ea:ActionMenu:Overlay>
+                        </twig:ea:ActionMenu>
 
                         {{ settings_dropdown }}
                     {% endblock responsive_header %}
@@ -310,16 +314,17 @@
                             {% block header_custom_menu_wrapper %}
                             <div class="navbar-custom-menu">
                                 {% block header_custom_menu %}
-                                    <div class="dropdown user-menu-wrapper {{ is_granted(impersonator_permission) ? 'user-is-impersonated' }}">
-                                        <a class="user-details" type="button" data-bs-toggle="dropdown" data-bs-offset="0,5" aria-expanded="false">
+                                    <twig:ea:ActionMenu class="user-menu-wrapper {{ is_granted(impersonator_permission) ? 'user-is-impersonated' }}">
+                                        <twig:ea:ActionMenu:Button class="user-details" withoutDropdownToggleMarker>
                                             {{ user_menu_avatar }}
                                             {% if ea.userMenu.isNameDisplayed %}
                                                 <span class="user-name">{{ ea.userMenu.name }}</span>
                                             {% endif %}
-                                        </a>
-
-                                        {{ user_menu_dropdown }}
-                                    </div>
+                                        </twig:ea:ActionMenu:Button>
+                                        <twig:ea:ActionMenu:Overlay>
+                                            {{ user_menu_dropdown }}
+                                        </twig:ea:ActionMenu:Overlay>
+                                    </twig:ea:ActionMenu>
                                 {% endblock header_custom_menu %}
                             </div>
                             {% endblock header_custom_menu_wrapper %}
@@ -378,6 +383,7 @@
                 </section>
                 {% endblock main_content_wrapper %}
             {% endblock wrapper %}
+        </div>
         </div>
     {% endblock wrapper_wrapper %}
 

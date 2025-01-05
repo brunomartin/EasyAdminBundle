@@ -117,6 +117,24 @@ that page title:
         }
     }
 
+EasyAdmin 4.8.11
+----------------
+
+EasyAdmin URLs no longer include the `referrer` query parameter, and the
+`AdminContext:getReferrer()` method is deprecated.
+
+This change is part of the long-term project to simplify URLs, with the goal of
+using pretty URLs in the future. If you still need to access the referrer, you
+can retrieve it from the HTTP headers provided by browsers:
+
+```php
+// Before
+return $this->redirect($context->getReferrer());
+
+// After
+return $this->redirect($context->getRequest()->headers->get('referer'));
+```
+
 EasyAdmin 4.8.0
 ---------------
 

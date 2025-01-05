@@ -205,6 +205,9 @@ body.ea-mobile-sidebar-visible .sidebar {
     inset-inline-start: 0;
 }
 
+.dropdown-toggle.dropdown-toggle-hidden-marker:after { display: none; }
+.dropdown-toggle.dropdown-toggle-hidden-marker:hover { cursor: pointer; }
+
 .user-menu-wrapper a.user-details,
 a.user-menu-wrapper .user-details:hover {
     align-items: center;
@@ -231,6 +234,9 @@ a.user-menu-wrapper .user-details:hover {
     max-inline-size: 21px;
     inline-size: 2em;
     text-align: center;
+}
+.user-menu-wrapper .dropdown-user-details .user-avatar .icon {
+    display: block;
 }
 
 .user-menu-wrapper .dropdown-menu {
@@ -717,6 +723,9 @@ a.user-menu-wrapper .user-details:hover {
     color: var(--dropdown-icon-color);
     margin: 0 10px 0 4px;
     font-size: 15px;
+}
+.dropdown-menu .icon {
+    display: inline-flex;
 }
 
 .dropdown-menu .dropdown-item,

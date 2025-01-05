@@ -182,7 +182,7 @@ class EasyAdminTwigExtension extends AbstractExtension implements GlobalsInterfa
                 return sprintf('%s #%s', $value::class, $value->getId());
             }
 
-            return sprintf('%s #%s', $value::class, substr(md5(spl_object_hash($value)), 0, 7));
+            return sprintf('%s #%s', $value::class, hash('xxh32', (string) spl_object_id($value)));
         }
 
         return '';

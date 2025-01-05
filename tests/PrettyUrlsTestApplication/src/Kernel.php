@@ -15,6 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel as SymfonyKernel;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Symfony\UX\TwigComponent\TwigComponentBundle;
+use Twig\Extra\TwigExtraBundle\TwigExtraBundle;
 
 final class Kernel extends SymfonyKernel
 {
@@ -28,14 +29,15 @@ final class Kernel extends SymfonyKernel
     public function registerBundles(): iterable
     {
         return [
-            new FrameworkBundle(),
-            new TwigBundle(),
+            new DebugBundle(),
             new DoctrineBundle(),
             new DoctrineFixturesBundle(),
-            new SecurityBundle(),
-            new DebugBundle(),
             new EasyAdminBundle(),
+            new FrameworkBundle(),
+            new SecurityBundle(),
+            new TwigBundle(),
             new TwigComponentBundle(),
+            new TwigExtraBundle(),
         ];
     }
 

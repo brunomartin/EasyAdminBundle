@@ -70,6 +70,13 @@ final class AdminContext implements AdminContextInterface
 
     public function getReferrer(): ?string
     {
+        trigger_deprecation(
+            'easycorp/easyadmin-bundle',
+            '4.8.11',
+            'EasyAdmin URLs no longer include the referrer URL. If you still need it, you can get the referrer provided by browsers via $context->getRequest()->headers->get(\'referer\').',
+            __METHOD__,
+        );
+
         $referrer = $this->request->query->get(EA::REFERRER);
 
         return '' !== $referrer ? $referrer : null;
