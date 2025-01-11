@@ -151,15 +151,13 @@ final class AdminRouteGenerator implements AdminRouteGeneratorInterface
 
                     $defaults = [
                         '_controller' => $crudControllerFqcn.'::'.$actionName,
-                    ];
-                    $options = [
                         EA::ROUTE_CREATED_BY_EASYADMIN => true,
                         EA::DASHBOARD_CONTROLLER_FQCN => $dashboardFqcn,
                         EA::CRUD_CONTROLLER_FQCN => $crudControllerFqcn,
                         EA::CRUD_ACTION => $actionName,
                     ];
 
-                    $adminRoute = new Route($adminRoutePath, defaults: $defaults, options: $options, methods: $actionRouteConfig['methods']);
+                    $adminRoute = new Route($adminRoutePath, defaults: $defaults, methods: $actionRouteConfig['methods']);
                     $adminRoutes[$adminRouteName] = $adminRoute;
                     $addedRouteNames[] = $adminRouteName;
                 }
@@ -219,8 +217,13 @@ final class AdminRouteGenerator implements AdminRouteGeneratorInterface
         foreach ($this->dashboardControllers as $dashboardController) {
             $reflectionClass = new \ReflectionClass($dashboardController);
             $indexMethod = $reflectionClass->getMethod('index');
-            $routeAttributeFqcn = class_exists(\Symfony\Component\Routing\Attribute\Route::class) ? \Symfony\Component\Routing\Attribute\Route::class : \Symfony\Component\Routing\Annotation\Route::class;
-            $attributes = $indexMethod->getAttributes($routeAttributeFqcn);
+
+            // for BC reasons, the Symfony Route attribute is available under two different namespaces;
+            // true first the recommended namespace and then fall back to the legacy namespace
+            $attributes = $indexMethod->getAttributes('Symfony\Component\Routing\Attribute\Route');
+            if ([] === $attributes) {
+                $attributes = $indexMethod->getAttributes('Symfony\Component\Routing\Annotation\Route');
+            }
 
             if ([] === $attributes) {
                 throw new \RuntimeException(sprintf('When using pretty URLs, the "%s" EasyAdmin dashboard controller must define its route configuration (route name and path) using Symfony\'s #[Route] attribute applied to its "index()" method.', $reflectionClass->getName()));
@@ -392,12 +395,12 @@ final class AdminRouteGenerator implements AdminRouteGeneratorInterface
         // then, add all the generated admin routes
         foreach ($adminRoutes as $routeName => $route) {
             $routeNameToFqcn[$routeName] = [
-                EA::DASHBOARD_CONTROLLER_FQCN => $route->getOption(EA::DASHBOARD_CONTROLLER_FQCN),
-                EA::CRUD_CONTROLLER_FQCN => $route->getOption(EA::CRUD_CONTROLLER_FQCN),
-                EA::CRUD_ACTION => $route->getOption(EA::CRUD_ACTION),
+                EA::DASHBOARD_CONTROLLER_FQCN => $route->getDefault(EA::DASHBOARD_CONTROLLER_FQCN),
+                EA::CRUD_CONTROLLER_FQCN => $route->getDefault(EA::CRUD_CONTROLLER_FQCN),
+                EA::CRUD_ACTION => $route->getDefault(EA::CRUD_ACTION),
             ];
 
-            $fqcnToRouteName[$route->getOption(EA::DASHBOARD_CONTROLLER_FQCN)][$route->getOption(EA::CRUD_CONTROLLER_FQCN)][$route->getOption(EA::CRUD_ACTION)] = $routeName;
+            $fqcnToRouteName[$route->getDefault(EA::DASHBOARD_CONTROLLER_FQCN)][$route->getDefault(EA::CRUD_CONTROLLER_FQCN)][$route->getDefault(EA::CRUD_ACTION)] = $routeName;
         }
 
         $routeNameToFqcnItem = $this->cache->getItem(self::CACHE_KEY_ROUTE_TO_FQCN);

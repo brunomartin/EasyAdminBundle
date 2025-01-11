@@ -143,7 +143,7 @@
                             {% for localeDto in ea.dashboardLocales %}
                                 <twig:ea:ActionMenu:ActionList:Item
                                     class="{{ app.request.locale == localeDto.locale ? 'active' }}"
-                                    url="{{ ea_url().set('_locale', localeDto.locale) }}"
+                                    url="{{ ea_url().set('_locale', localeDto.locale).set('entityId', app.request.attributes.get('entityId')).generateUrl() }}"
                                     icon="{{ localeDto.icon }}" label="{{ localeDto.name }}" />
                             {% endfor %}
 

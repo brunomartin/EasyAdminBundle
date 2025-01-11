@@ -172,6 +172,7 @@ return static function (ContainerConfigurator $container) {
             ->arg(3, service('router'))
             ->arg(4, service('router'))
             ->arg(5, service('cache.easyadmin'))
+            ->arg(6, service(AdminRouteGenerator::class))
             ->tag('kernel.event_subscriber')
 
         ->set(ControllerFactory::class)
