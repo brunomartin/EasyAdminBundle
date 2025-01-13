@@ -3,9 +3,12 @@
 namespace EasyCorp\Bundle\EasyAdminBundle\Tests\Controller\PrettyUrls;
 
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Option\EA;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Tests\PrettyUrlsTestApplication\Controller\BlogPostCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Tests\PrettyUrlsTestApplication\Controller\CategoryCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Tests\PrettyUrlsTestApplication\Controller\DashboardController;
+use EasyCorp\Bundle\EasyAdminBundle\Tests\PrettyUrlsTestApplication\Entity\Category;
 use EasyCorp\Bundle\EasyAdminBundle\Tests\PrettyUrlsTestApplication\Kernel;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -278,6 +281,26 @@ class PrettyUrlsControllerTest extends WebTestCase
         $this->assertSame('http://localhost/admin/pretty/urls/blog-post', $blogPostIndexUrl);
     }
 
+    /**
+     * @dataProvider provideUglyUrlRedirects
+     */
+    public function testUglyUrlsAreRedirectedToPrettyUrls(string $crudControllerFqcn, string $crudAction, ?int $entityId, array $extraQueryParameters, string $expectedPrettyUrlRedirect)
+    {
+        $client = static::createClient();
+        $client->followRedirects(false);
+
+        $queryParameters = array_merge([
+            EA::CRUD_CONTROLLER_FQCN => $crudControllerFqcn,
+            EA::CRUD_ACTION => $crudAction,
+            EA::ENTITY_ID => $entityId,
+        ], $extraQueryParameters);
+
+        $uglyUrl = sprintf('/admin/pretty/urls?%s', http_build_query($queryParameters));
+        $client->request('GET', $uglyUrl);
+
+        $this->assertSame($expectedPrettyUrlRedirect, $client->getResponse()->headers->get('Location'));
+    }
+
     public static function provideActiveMenuUrls(): iterable
     {
         yield ['/admin/pretty/urls/category'];
@@ -291,5 +314,18 @@ class PrettyUrlsControllerTest extends WebTestCase
         yield 'Create' => ['/admin/pretty/urls/category/new'];
         yield 'Read' => ['/admin/pretty/urls/category/1'];
         yield 'Update' => ['/admin/pretty/urls/category/1/edit'];
+    }
+
+    public static function provideUglyUrlRedirects(): iterable
+    {
+        yield [CategoryCrudController::class, Action::INDEX, null, [], '/admin/pretty/urls/category'];
+        yield [Category::class, Action::INDEX, null, [], '/admin/pretty/urls/category'];
+        yield [Category::class, Action::INDEX, null, ['page' => 2, 'foo' => 'bar'], '/admin/pretty/urls/category?page=2&foo=bar'];
+        yield [CategoryCrudController::class, Action::DETAIL, 1, [], '/admin/pretty/urls/category/1'];
+        yield [Category::class, Action::DETAIL, 1, [], '/admin/pretty/urls/category/1'];
+        yield [CategoryCrudController::class, Action::NEW, null, [], '/admin/pretty/urls/category/new'];
+        yield [Category::class, Action::NEW, null, [], '/admin/pretty/urls/category/new'];
+        yield [CategoryCrudController::class, Action::EDIT, 1, [], '/admin/pretty/urls/category/1/edit'];
+        yield [Category::class, Action::EDIT, 1, [], '/admin/pretty/urls/category/1/edit'];
     }
 }

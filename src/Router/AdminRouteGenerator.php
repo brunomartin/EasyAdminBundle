@@ -8,6 +8,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Option\EA;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Router\AdminRouteGeneratorInterface;
 use Psr\Cache\CacheItemPoolInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -59,10 +60,14 @@ final class AdminRouteGenerator implements AdminRouteGeneratorInterface
         ],
     ];
 
+    private ?bool $applicationUsesPrettyUrls = null;
+
     public function __construct(
         private iterable $dashboardControllers,
         private iterable $crudControllers,
         private CacheItemPoolInterface $cache,
+        private Filesystem $filesystem,
+        private string $buildDir,
     ) {
     }
 
@@ -86,9 +91,7 @@ final class AdminRouteGenerator implements AdminRouteGeneratorInterface
     // TODO: remove this method in EasyAdmin 5.x
     public function usesPrettyUrls(): bool
     {
-        $cachedAdminRoutes = $this->cache->getItem(self::CACHE_KEY_FQCN_TO_ROUTE)->get();
-
-        return null !== $cachedAdminRoutes && [] !== $cachedAdminRoutes;
+        return $this->applicationUsesPrettyUrls ??= $this->filesystem->exists(sprintf('%s/%s', $this->buildDir, AdminRouteLoader::PRETTY_URLS_CONTEXT_FILE_NAME));
     }
 
     public function findRouteName(string $dashboardFqcn, string $crudControllerFqcn, string $actionName): ?string

@@ -55,7 +55,8 @@
         "symfony/dom-crawler": "^5.4|^6.0|^7.0",
         "symfony/expression-language": "^5.4|^6.0|^7.0",
         "symfony/phpunit-bridge": "^6.1|^7.0",
-        "symfony/process": "^5.4|^6.0|^7.0"
+        "symfony/process": "^5.4|^6.0|^7.0",
+        "symfony/web-link": "^5.4|^6.0|^7.0"
     },
     "config": {
         "sort-packages": true,

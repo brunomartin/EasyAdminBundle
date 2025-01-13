@@ -173,6 +173,8 @@ return static function (ContainerConfigurator $container) {
             ->arg(4, service('router'))
             ->arg(5, service('cache.easyadmin'))
             ->arg(6, service(AdminRouteGenerator::class))
+            ->arg(7, '%kernel.build_dir%')
+            ->arg(8, service(CrudControllerRegistry::class))
             ->tag('kernel.event_subscriber')
 
         ->set(ControllerFactory::class)
@@ -213,9 +215,13 @@ return static function (ContainerConfigurator $container) {
             ->arg(0, tagged_iterator(EasyAdminExtension::TAG_DASHBOARD_CONTROLLER))
             ->arg(1, tagged_iterator(EasyAdminExtension::TAG_CRUD_CONTROLLER))
             ->arg(2, service('cache.easyadmin'))
+            ->arg(3, service('filesystem'))
+            ->arg(4, '%kernel.build_dir%')
 
         ->set(AdminRouteLoader::class)
             ->arg(0, service(AdminRouteGenerator::class))
+            ->arg(1, service('filesystem'))
+            ->arg(2, '%kernel.build_dir%')
             ->tag('routing.loader', ['type' => AdminRouteLoader::ROUTE_LOADER_TYPE])
 
         ->set(UrlSigner::class)

@@ -168,7 +168,7 @@ class MenuItemMatcher implements MenuItemMatcherInterface
         // 2) if no exact match is found, traverse all menu items again and try to find a partial match
         $currentUrlWithoutHost = $request->getPathInfo();
         $currentUrlQueryParams = $request->query->all();
-        unset($currentUrlQueryParams['sort'], $currentUrlQueryParams['page']);
+        unset($currentUrlQueryParams['sort'], $currentUrlQueryParams['page'], $currentUrlQueryParams['query']);
         // sort them because menu items always have their query parameters sorted
         ksort($currentUrlQueryParams);
 

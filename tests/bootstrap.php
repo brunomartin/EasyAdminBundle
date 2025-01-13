@@ -5,6 +5,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Tests\TestApplication\Kernel;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Filesystem\Filesystem;
 
 // needed to avoid encoding issues when running tests on different platforms
 setlocale(\LC_ALL, 'en_US.UTF-8');
@@ -45,7 +46,7 @@ if ('1' === getenv('USE_PRETTY_URLS')) {
 }
 
 // delete the existing cache directory to avoid issues
-(new Symfony\Component\Filesystem\Filesystem())->remove($kernel->getCacheDir());
+(new Filesystem())->remove($kernel->getCacheDir());
 
 $application = new Application($kernel);
 $application->setAutoExit(false);
