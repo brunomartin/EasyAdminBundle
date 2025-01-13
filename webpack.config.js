@@ -7,7 +7,7 @@ Encore
 
     .cleanupOutputBeforeBuild()
     .enableSourceMaps(false)
-    .enableVersioning(true)
+    .enableVersioning(Encore.isProduction())
     .disableSingleRuntimeChunk()
 
     .configureCssMinimizerPlugin((options) => {
