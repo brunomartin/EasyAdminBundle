@@ -163,8 +163,7 @@ class AdminRouterSubscriber implements EventSubscriberInterface
 
         // if this is a ugly URL from legacy EasyAdmin versions and the application
         // uses pretty URLs, redirect to the equivalent pretty URL
-        if ($this->adminRouteGenerator->usesPrettyUrls()) {
-            $entityFqcnOrCrudControllerFqcn = $request->query->get(EA::CRUD_CONTROLLER_FQCN);
+        if ($this->adminRouteGenerator->usesPrettyUrls() && null !== $entityFqcnOrCrudControllerFqcn = $request->query->get(EA::CRUD_CONTROLLER_FQCN)) {
             if (is_subclass_of($entityFqcnOrCrudControllerFqcn, CrudControllerInterface::class)) {
                 $crudControllerFqcn = $entityFqcnOrCrudControllerFqcn;
             } else {
@@ -172,11 +171,13 @@ class AdminRouterSubscriber implements EventSubscriberInterface
             }
 
             $prettyUrlRoute = $this->adminRouteGenerator->findRouteName($dashboardControllerFqcn, $crudControllerFqcn, $request->query->get(EA::CRUD_ACTION, ''));
-            $request->query->remove(EA::CRUD_CONTROLLER_FQCN);
+            if (null !== $prettyUrlRoute) {
+                $request->query->remove(EA::CRUD_CONTROLLER_FQCN);
 
-            $event->setResponse(new RedirectResponse($this->urlGenerator->generate($prettyUrlRoute, $request->query->all())));
+                $event->setResponse(new RedirectResponse($this->urlGenerator->generate($prettyUrlRoute, $request->query->all())));
 
-            return;
+                return;
+            }
         }
 
         if (null === $dashboardControllerInstance = $this->getDashboardControllerInstance($dashboardControllerFqcn, $request)) {

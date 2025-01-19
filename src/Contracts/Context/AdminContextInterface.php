@@ -18,6 +18,9 @@ interface AdminContextInterface
 {
     public function getRequest(): Request;
 
+    /**
+     * @deprecated since 4.8.11, will be removed in 5.0. Use $context->getRequest()->headers->get('referer') or redirect to some specific URL
+     */
     public function getReferrer(): ?string;
 
     public function getI18n(): I18nDto;
@@ -30,6 +33,9 @@ interface AdminContextInterface
 
     public function getAssets(): AssetsDto;
 
+    /**
+     * @deprecated since 4.1.0, will be removed in 5.0.0. Signed URLs don't provide additional security in backends and have been removed without a replacement.
+     */
     public function getSignedUrls(): bool;
 
     public function getAbsoluteUrls(): bool;

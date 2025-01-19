@@ -41,14 +41,15 @@ if (interface_exists(ValueResolverInterface::class)) {
                 $context->getRequest()->request->all()[EA::BATCH_ACTION_ENTITY_IDS] ?? [],
                 $context->getRequest()->request->get(EA::ENTITY_FQCN),
                 $this->getReferrerUrl($context, $request),
-                $context->getRequest()->request->get(EA::BATCH_ACTION_CSRF_TOKEN)
+                $context->getRequest()->request->get(EA::BATCH_ACTION_CSRF_TOKEN),
+                false
             );
         }
 
         private function getReferrerUrl(AdminContext $adminContext, Request $request): string
         {
-            $crudControllerFqcn = null;
-            if ($adminContext->usePrettyUrls()) {
+            $urlUsesPrettyUrls = $request->attributes->has(EA::CRUD_CONTROLLER_FQCN);
+            if ($urlUsesPrettyUrls) {
                 $crudControllerFqcn = $request->attributes->get(EA::CRUD_CONTROLLER_FQCN);
             } else {
                 $batchActionUrl = $adminContext->getRequest()->request->get(EA::BATCH_ACTION_URL);
@@ -95,14 +96,15 @@ if (interface_exists(ValueResolverInterface::class)) {
                 $context->getRequest()->request->all()[EA::BATCH_ACTION_ENTITY_IDS] ?? [],
                 $context->getRequest()->request->get(EA::ENTITY_FQCN),
                 $this->getReferrerUrl($context, $request),
-                $context->getRequest()->request->get(EA::BATCH_ACTION_CSRF_TOKEN)
+                $context->getRequest()->request->get(EA::BATCH_ACTION_CSRF_TOKEN),
+                false
             );
         }
 
         private function getReferrerUrl(AdminContext $adminContext, Request $request): string
         {
-            $crudControllerFqcn = null;
-            if ($adminContext->usePrettyUrls()) {
+            $urlUsesPrettyUrls = $request->attributes->has(EA::CRUD_CONTROLLER_FQCN);
+            if ($urlUsesPrettyUrls) {
                 $crudControllerFqcn = $request->attributes->get(EA::CRUD_CONTROLLER_FQCN);
             } else {
                 $batchActionUrl = $adminContext->getRequest()->request->get(EA::BATCH_ACTION_URL);

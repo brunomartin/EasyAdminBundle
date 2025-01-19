@@ -236,6 +236,7 @@ return static function (ContainerConfigurator $container) {
 
         ->set(MenuItemMatcher::class)
             ->arg(0, service(AdminUrlGenerator::class))
+            ->arg(1, service(AdminRouteGenerator::class))
 
         ->alias(MenuItemMatcherInterface::class, MenuItemMatcher::class)
 
